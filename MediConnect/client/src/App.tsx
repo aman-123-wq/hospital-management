@@ -21,8 +21,8 @@ function Router() {
       <main className="flex-1 overflow-auto">
         <Switch>
           <Route path="/" component={Dashboard} />
-          <Route path="/beds" component={Beds} />
-          <Route path="/appointments" component={Appointments} />
+          <Route path="/bed-management" component={Beds} />
+          <Route path="/organ-donors" component={Donors} />
           <Route path="/donors" component={Donors} />
           <Route path="/doctors" component={Doctors} />
           <Route path="/patients" component={Patients} />
