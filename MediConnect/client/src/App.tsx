@@ -11,7 +11,7 @@ import Donors from "@/pages/donors";
 import Doctors from "@/pages/doctors";
 import Patients from "@/pages/patients";
 import ChatbotPage from "@/pages/chatbot";
-import AiAssistant from "@/pages/ai-assistant"; // ADD THIS IMPORT
+import AiAssistant from "@/pages/ai-assistant";
 import Sidebar from "@/components/layout/sidebar";
 
 function Router() {
@@ -21,13 +21,14 @@ function Router() {
       <main className="flex-1 overflow-auto">
         <Switch>
           <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/bed-management" component={Beds} />
+          <Route path="/appointments" component={Appointments} /> {/* ADDED */}
           <Route path="/organ-donors" component={Donors} />
-          <Route path="/donors" component={Donors} />
           <Route path="/doctors" component={Doctors} />
           <Route path="/patients" component={Patients} />
+          <Route path="/ai-assistant" component={AiAssistant} />
           <Route path="/chatbot" component={ChatbotPage} />
-          <Route path="/ai-assistant" component={AiAssistant} /> {/* ADD THIS LINE */}
           <Route component={NotFound} />
         </Switch>
       </main>
