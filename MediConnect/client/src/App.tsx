@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Sidebar from "@/components/layout/sidebar";
 
-// Simple Dashboard component (no errors)
+// Simple Dashboard component
 function Dashboard() {
   return (
     <div className="p-6">
@@ -42,24 +42,76 @@ function Dashboard() {
   );
 }
 
-// Keep the other simple components for now
+// Bed Management Page
 function Beds() {
-  return <div className="p-6"><h1>Bed Management - Loading...</h1></div>;
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Bed Management</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Bed management system - Real data coming soon!</p>
+      </div>
+    </div>
+  );
 }
-function Patients() {
-  return <div className="p-6"><h1>Patients - Loading...</h1></div>;
-}
-function Doctors() {
-  return <div className="p-6"><h1>Doctors - Loading...</h1></div>;
-}
+
+// Appointments Page
 function Appointments() {
-  return <div className="p-6"><h1>Appointments - Loading...</h1></div>;
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Appointments</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Appointment scheduling - Real data coming soon!</p>
+      </div>
+    </div>
+  );
 }
+
+// Organ Donors Page
 function Donors() {
-  return <div className="p-6"><h1>Organ Donors - Loading...</h1></div>;
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Organ Donors</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Organ donor management - Real data coming soon!</p>
+      </div>
+    </div>
+  );
 }
+
+// Doctors Page
+function Doctors() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Doctors</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Doctor management - Real data coming soon!</p>
+      </div>
+    </div>
+  );
+}
+
+// Patients Page
+function Patients() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Patients</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Patient management - Real data coming soon!</p>
+      </div>
+    </div>
+  );
+}
+
+// AI Assistant Page
 function AiAssistant() {
-  return <div className="p-6"><h1>AI Assistant - Loading...</h1></div>;
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">AI Assistant</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>AI medical assistant - Coming soon!</p>
+      </div>
+    </div>
+  );
 }
 
 function Router() {
