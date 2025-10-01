@@ -7,9 +7,7 @@ import NotFound from "@/pages/not-found";
 import Sidebar from "@/components/layout/sidebar";
 
 // Simple page components for testing
-function Dashboard() {
-  return <div className="p-6"><h1>Dashboard - Loading...</h1></div>;
-}
+import Dashboard from "@/pages/dashboard";
 function Beds() {
   return <div className="p-6"><h1>Bed Management - Loading...</h1></div>;
 }
