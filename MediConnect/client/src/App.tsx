@@ -114,6 +114,18 @@ function AiAssistant() {
   );
 }
 
+// Chatbot Page
+function ChatbotPage() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Chatbot</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>Medical chatbot - Coming soon!</p>
+      </div>
+    </div>
+  );
+}
+
 function Router() {
   return (
     <div className="min-h-screen flex bg-background">
@@ -122,12 +134,27 @@ function Router() {
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
+          
+          {/* BED MANAGEMENT ROUTES - Multiple possible paths */}
           <Route path="/bed-management" component={Beds} />
+          <Route path="/beds" component={Beds} />
+          
           <Route path="/appointments" component={Appointments} />
+          
+          {/* ORGAN DONORS ROUTES - Multiple possible paths */}
           <Route path="/organ-donors" component={Donors} />
+          <Route path="/donors" component={Donors} />
+          <Route path="/organ-donor" component={Donors} />
+          
           <Route path="/doctors" component={Doctors} />
           <Route path="/patients" component={Patients} />
+          
+          {/* AI & CHATBOT ROUTES */}
           <Route path="/ai-assistant" component={AiAssistant} />
+          <Route path="/ai" component={AiAssistant} />
+          <Route path="/chatbot" component={ChatbotPage} />
+          <Route path="/chat" component={ChatbotPage} />
+          
           <Route component={NotFound} />
         </Switch>
       </main>
