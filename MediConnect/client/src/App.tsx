@@ -1,40 +1,63 @@
 import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NotFound from "@/pages/not-found";
+import Sidebar from "@/components/layout/sidebar";
+
+// Simple page components for testing
+function Dashboard() {
+  return <div className="p-6"><h1>Dashboard - Loading...</h1></div>;
+}
+function Beds() {
+  return <div className="p-6"><h1>Bed Management - Loading...</h1></div>;
+}
+function Patients() {
+  return <div className="p-6"><h1>Patients - Loading...</h1></div>;
+}
+function Doctors() {
+  return <div className="p-6"><h1>Doctors - Loading...</h1></div>;
+}
+function Appointments() {
+  return <div className="p-6"><h1>Appointments - Loading...</h1></div>;
+}
+function Donors() {
+  return <div className="p-6"><h1>Organ Donors - Loading...</h1></div>;
+}
+function AiAssistant() {
+  return <div className="p-6"><h1>AI Assistant - Loading...</h1></div>;
+}
+
+function Router() {
+  return (
+    <div className="min-h-screen flex bg-background">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
+        <Switch>
+          <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/bed-management" component={Beds} />
+          <Route path="/appointments" component={Appointments} />
+          <Route path="/organ-donors" component={Donors} />
+          <Route path="/doctors" component={Doctors} />
+          <Route path="/patients" component={Patients} />
+          <Route path="/ai-assistant" component={AiAssistant} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>🏥 MediCare HMS - Working!</h1>
-      <p>Your hospital management system is running successfully!</p>
-      
-      <nav style={{ margin: "20px 0" }}>
-        <a href="/" style={{ marginRight: "15px" }}>Dashboard</a>
-        <a href="/bed-management" style={{ marginRight: "15px" }}>Beds</a>
-        <a href="/patients" style={{ marginRight: "15px" }}>Patients</a>
-        <a href="/doctors">Doctors</a>
-      </nav>
-      
-      <Switch>
-        <Route path="/">
-          <h2>Dashboard</h2>
-          <p>Welcome to your hospital dashboard!</p>
-        </Route>
-        <Route path="/bed-management">
-          <h2>Bed Management</h2>
-          <p>Bed management page is working!</p>
-        </Route>
-        <Route path="/patients">
-          <h2>Patients</h2>
-          <p>Patients page is working!</p>
-        </Route>
-        <Route path="/doctors">
-          <h2>Doctors</h2>
-          <p>Doctors page is working!</p>
-        </Route>
-        <Route>
-          <h2>404 - Page Not Found</h2>
-        </Route>
-      </Switch>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 }
 
