@@ -262,46 +262,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Organ Donors API
-  app.get("/api/organ-donors", async (req, res) => {
-    try {
-      const { bloodType, organType } = req.query;
-      const donors = await storage.searchOrganDonors(
-        bloodType as string,
-        organType as string,
+  // Organ Donors API - FIXED VERSION
+app.get("/api/organ-donors", async (req, res) => {
+  try {
+    const { bloodType, organType } = req.query;
+    const donors = await storage.searchOrganDonors(
+      bloodType as string,
+      organType as string,
+    );
+    res.json(donors);
+  } catch (error) {
+    console.error("Error fetching organ donors, using mock data:", error);
+    let filteredDonors = [...mockData.donors]; // Create a copy
+    
+    // FIX: Get parameters from req.query properly
+    const bloodTypeParam = req.query.bloodType as string;
+    const organTypeParam = req.query.organType as string;
+    
+    if (bloodTypeParam) {
+      filteredDonors = filteredDonors.filter(d => d.bloodType === bloodTypeParam);
+    }
+    if (organTypeParam) {
+      filteredDonors = filteredDonors.filter(d => 
+        d.organs.some(organ => organ.toLowerCase().includes(organTypeParam.toLowerCase()))
       );
-      res.json(donors);
-    } catch (error) {
-      console.error("Error fetching organ donors, using mock data:", error);
-      let filteredDonors = mockData.donors;
-      
-      if (bloodType) {
-        filteredDonors = filteredDonors.filter(d => d.bloodType === bloodType);
-      }
-      if (organType) {
-        filteredDonors = filteredDonors.filter(d => 
-          d.organs.some(organ => organ.toLowerCase().includes((organType as string).toLowerCase()))
-        );
-      }
-      
-      res.json(filteredDonors);
     }
-  });
-
-  app.post("/api/organ-donors", async (req, res) => {
-    try {
-      const validatedData = insertOrganDonorSchema.parse(req.body);
-      const donor = await storage.createOrganDonor(validatedData);
-
-      // Broadcast real-time update
-      broadcastUpdate("newDonor", donor);
-
-      res.status(201).json(donor);
-    } catch (error) {
-      console.error("Error creating organ donor:", error);
-      res.status(400).json({ message: "Failed to create organ donor" });
-    }
-  });
+    
+    res.json(filteredDonors);
+  }
+});
 
   // Alerts API
   app.get("/api/alerts", async (req, res) => {
