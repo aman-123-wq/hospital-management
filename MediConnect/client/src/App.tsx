@@ -311,38 +311,44 @@ function Patients() {
   };
 
   const addPatient = () => {
-  // Send POST request to backend
-  fetch('https://mediconnect-backend-rje5.onrender.com/api/patients', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: newPatient.name,
-      age: parseInt(newPatient.age),
-      condition: newPatient.condition,
-      room: newPatient.room
+    // Split the name into firstName and lastName
+    const nameParts = newPatient.name.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || 'Unknown';
+
+    // Send POST request to backend with correct fields
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/patients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        age: parseInt(newPatient.age),
+        condition: newPatient.condition,
+        room: newPatient.room
+      })
     })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to save patient');
-    }
-    return response.json();
-  })
-  .then(savedPatient => {
-    // Add the new patient to the list
-    setPatients([...patients, savedPatient]);
-    // Reset form and close it
-    setNewPatient({ name: '', age: '', condition: 'Stable', room: '' });
-    setShowAddForm(false);
-    alert('Patient saved successfully!');
-  })
-  .catch(error => {
-    console.error('Error saving patient:', error);
-    alert('Error saving patient. Please try again.');
-  });
-};
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to save patient');
+      }
+      return response.json();
+    })
+    .then(savedPatient => {
+      // Add the new patient to the list
+      setPatients([...patients, savedPatient]);
+      // Reset form and close it
+      setNewPatient({ name: '', age: '', condition: 'Stable', room: '' });
+      setShowAddForm(false);
+      alert('Patient saved successfully!');
+    })
+    .catch(error => {
+      console.error('Error saving patient:', error);
+      alert('Error saving patient. Please try again.');
+    });
+  };
 
   if (loading) {
     return (
@@ -429,7 +435,8 @@ function Patients() {
           <div className="space-y-4">
             {patients.map(patient => (
               <div key={patient.id} className="border-b pb-4">
-                <h3 className="font-semibold text-lg">{patient.name}</h3>
+                {/* FIXED THIS LINE ↓ */}
+                <h3 className="font-semibold text-lg">{patient.firstName} {patient.lastName}</h3>
                 <p>Age: {patient.age} | Condition: {patient.condition}</p>
                 <p>Room: {patient.room}</p>
               </div>
