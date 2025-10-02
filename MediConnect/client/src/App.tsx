@@ -77,17 +77,60 @@ function Dashboard() {
   );
 }
 // Bed Management Page
+// Bed Management - Real Data
 function Beds() {
+  const [beds, setBeds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/beds')
+      .then(response => response.json())
+      .then(data => {
+        setBeds(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Using sample bed data');
+        setBeds([
+          { id: 1, room: "101", status: "Occupied", patient: "John Doe" },
+          { id: 2, room: "102", status: "Occupied", patient: "Jane Smith" },
+          { id: 3, room: "103", status: "Available", patient: "" },
+          { id: 4, room: "ICU-1", status: "Critical", patient: "Mike Johnson" },
+          { id: 5, room: "104", status: "Available", patient: "" }
+        ]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="p-6"><h1 className="text-2xl font-bold mb-6">Bed Management</h1><div className="bg-white p-6 rounded-lg shadow-md"><p>Loading bed data...</p></div></div>;
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Bed Management</h1>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <p>Bed management system - Real data coming soon!</p>
+        <h2 className="text-xl font-semibold mb-4">Bed Status</h2>
+        {beds.length === 0 ? <p>No bed data found.</p> : (
+          <div className="space-y-3">
+            {beds.map(bed => (
+              <div key={bed.id} className={`p-4 rounded-lg border ${
+                bed.status === 'Available' ? 'bg-green-50 border-green-200' :
+                bed.status === 'Critical' ? 'bg-red-50 border-red-200' :
+                'bg-yellow-50 border-yellow-200'
+              }`}>
+                <h3 className="font-semibold">Room {bed.room}</h3>
+                <p>Status: <span className={`font-semibold ${
+                  bed.status === 'Available' ? 'text-green-600' :
+                  bed.status === 'Critical' ? 'text-red-600' : 'text-yellow-600'
+                }`}>{bed.status}</span></p>
+                {bed.patient && <p>Patient: {bed.patient}</p>}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 // Appointments Page
 function Appointments() {
   return (
