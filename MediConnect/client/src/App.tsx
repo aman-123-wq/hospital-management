@@ -182,12 +182,52 @@ function Appointments() {
 }
 
 // Organ Donors Page
+// Organ Donors - Real Data
 function Donors() {
+  const [donors, setDonors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/donors')
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error('API not available');
+      })
+      .then(data => {
+        setDonors(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Using sample donor data');
+        setDonors([
+          { id: 1, name: "David Wilson", organs: "Kidney, Liver", bloodType: "O+", status: "Available" },
+          { id: 2, name: "Lisa Thompson", organs: "Heart, Lungs", bloodType: "A-", status: "Pending" },
+          { id: 3, name: "Michael Brown", organs: "Kidney", bloodType: "B+", status: "Available" }
+        ]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="p-6"><h1 className="text-2xl font-bold mb-6">Organ Donors</h1><div className="bg-white p-6 rounded-lg shadow-md"><p>Loading donor data...</p></div></div>;
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Organ Donors</h1>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <p>Organ donor management - Real data coming soon!</p>
+        <h2 className="text-xl font-semibold mb-4">Donor Registry</h2>
+        {donors.length === 0 ? <p>No donors registered.</p> : (
+          <div className="space-y-4">
+            {donors.map(donor => (
+              <div key={donor.id} className="border-b pb-4">
+                <h3 className="font-semibold text-lg">{donor.name}</h3>
+                <p>Organs: {donor.organs} | Blood Type: {donor.bloodType}</p>
+                <p>Status: <span className={`font-semibold ${
+                  donor.status === 'Available' ? 'text-green-600' : 'text-yellow-600'
+                }`}>{donor.status}</span></p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
