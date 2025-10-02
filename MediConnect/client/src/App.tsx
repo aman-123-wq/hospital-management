@@ -311,11 +311,38 @@ function Patients() {
   };
 
   const addPatient = () => {
-    // This will send new patient to backend
-    console.log('Adding patient:', newPatient);
-    alert('This will save to database! We need to create the backend endpoint first.');
+  // Send POST request to backend
+  fetch('https://mediconnect-backend-rje5.onrender.com/api/patients', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: newPatient.name,
+      age: parseInt(newPatient.age),
+      condition: newPatient.condition,
+      room: newPatient.room
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to save patient');
+    }
+    return response.json();
+  })
+  .then(savedPatient => {
+    // Add the new patient to the list
+    setPatients([...patients, savedPatient]);
+    // Reset form and close it
+    setNewPatient({ name: '', age: '', condition: 'Stable', room: '' });
     setShowAddForm(false);
-  };
+    alert('Patient saved successfully!');
+  })
+  .catch(error => {
+    console.error('Error saving patient:', error);
+    alert('Error saving patient. Please try again.');
+  });
+};
 
   if (loading) {
     return (
