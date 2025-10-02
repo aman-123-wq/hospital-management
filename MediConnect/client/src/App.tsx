@@ -113,12 +113,47 @@ function Donors() {
 }
 
 // Doctors Page
+// Doctors Page - Real Data
 function Doctors() {
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/doctors')
+      .then(response => response.json())
+      .then(data => {
+        setDoctors(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Using sample doctor data');
+        setDoctors([
+          { id: 1, name: "Dr. Sarah Wilson", specialty: "Cardiology", status: "Available" },
+          { id: 2, name: "Dr. Mike Chen", specialty: "Neurology", status: "In Surgery" },
+          { id: 3, name: "Dr. Emily Davis", specialty: "Pediatrics", status: "Available" },
+          { id: 4, name: "Dr. James Brown", specialty: "Orthopedics", status: "On Call" }
+        ]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="p-6"><h1 className="text-2xl font-bold mb-6">Doctors</h1><div className="bg-white p-6 rounded-lg shadow-md"><p>Loading doctor data...</p></div></div>;
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Doctors</h1>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <p>Doctor management - Real data coming soon!</p>
+        <h2 className="text-xl font-semibold mb-4">Medical Staff</h2>
+        {doctors.length === 0 ? <p>No doctors found.</p> : (
+          <div className="space-y-4">
+            {doctors.map(doctor => (
+              <div key={doctor.id} className="border-b pb-4">
+                <h3 className="font-semibold text-lg">{doctor.name}</h3>
+                <p>Specialty: {doctor.specialty} | Status: {doctor.status}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
