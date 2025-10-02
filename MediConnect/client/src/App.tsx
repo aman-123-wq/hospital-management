@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Sidebar from "@/components/layout/sidebar";
+import { useState, useEffect } from "react";
 
 // Simple Dashboard component
 function Dashboard() {
@@ -90,13 +91,56 @@ function Doctors() {
   );
 }
 
-// Patients Page
+// Patients Page - NEW VERSION (real data)
 function Patients() {
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch real patient data from your API
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/patients')
+      .then(response => response.json())
+      .then(data => {
+        setPatients(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching patients:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Patients</h1>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <p>Loading patient data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Patients</h1>
+      
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <p>Patient management - Real data coming soon!</p>
+        <h2 className="text-xl font-semibold mb-4">Patient List</h2>
+        
+        {patients.length === 0 ? (
+          <p>No patients found.</p>
+        ) : (
+          <div className="space-y-4">
+            {patients.map(patient => (
+              <div key={patient.id} className="border-b pb-4">
+                <h3 className="font-semibold text-lg">{patient.name}</h3>
+                <p>Age: {patient.age} | Condition: {patient.condition}</p>
+                <p>Room: {patient.room}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
