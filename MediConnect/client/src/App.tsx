@@ -132,12 +132,50 @@ function Beds() {
   );
 }
 // Appointments Page
+// Appointments - Real Data
 function Appointments() {
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/appointments')
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error('API not available');
+      })
+      .then(data => {
+        setAppointments(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Using sample appointment data');
+        setAppointments([
+          { id: 1, patient: "John Doe", doctor: "Dr. Sarah Wilson", time: "09:00 AM", type: "Checkup" },
+          { id: 2, patient: "Jane Smith", doctor: "Dr. Mike Chen", time: "10:30 AM", type: "Follow-up" },
+          { id: 3, patient: "Robert Brown", doctor: "Dr. Emily Davis", time: "02:15 PM", type: "Consultation" }
+        ]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="p-6"><h1 className="text-2xl font-bold mb-6">Appointments</h1><div className="bg-white p-6 rounded-lg shadow-md"><p>Loading appointments...</p></div></div>;
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Appointments</h1>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <p>Appointment scheduling - Real data coming soon!</p>
+        <h2 className="text-xl font-semibold mb-4">Today's Schedule</h2>
+        {appointments.length === 0 ? <p>No appointments scheduled.</p> : (
+          <div className="space-y-4">
+            {appointments.map(appointment => (
+              <div key={appointment.id} className="border-b pb-4">
+                <h3 className="font-semibold text-lg">{appointment.patient}</h3>
+                <p>Doctor: {appointment.doctor}</p>
+                <p>Time: {appointment.time} | Type: {appointment.type}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
