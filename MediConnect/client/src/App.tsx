@@ -8,36 +8,70 @@ import Sidebar from "@/components/layout/sidebar";
 import { useState, useEffect } from "react";
 
 // Simple Dashboard component
+// Dashboard with Real Data
 function Dashboard() {
+  const [stats, setStats] = useState({
+    totalPatients: 0,
+    availableBeds: 0,
+    todaysAppointments: 0,
+    activeDoctors: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch real dashboard stats from your API
+  useEffect(() => {
+    fetch('https://mediconnect-backend-rje5.onrender.com/api/dashboard/stats')
+      .then(response => response.json())
+      .then(data => {
+        setStats(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching dashboard stats:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <p>Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-2">Total Patients</h3>
+          <p className="text-2xl font-bold text-blue-600">{stats.totalPatients}</p>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-2">Available Beds</h3>
-          <p className="text-2xl font-bold text-green-600">2</p>
+          <p className="text-2xl font-bold text-green-600">{stats.availableBeds}</p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-2">Today's Appointments</h3>
-          <p className="text-2xl font-bold text-blue-600">5</p>
+          <p className="text-2xl font-bold text-orange-600">{stats.todaysAppointments}</p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold mb-2">Active Patients</h3>
-          <p className="text-2xl font-bold text-orange-600">12</p>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold mb-2">Available Doctors</h3>
-          <p className="text-2xl font-bold text-purple-600">8</p>
+          <h3 className="text-lg font-semibold mb-2">Active Doctors</h3>
+          <p className="text-2xl font-bold text-purple-600">{stats.activeDoctors}</p>
         </div>
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-        <p>Hospital management system is running successfully!</p>
+        <h2 className="text-xl font-semibold mb-4">Hospital Overview</h2>
+        <p>Real-time hospital statistics loaded successfully!</p>
       </div>
     </div>
   );
