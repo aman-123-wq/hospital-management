@@ -11,10 +11,10 @@ import { useState, useEffect } from "react";
 // Dashboard - Fixed Version
 function Dashboard() {
   const [stats, setStats] = useState({
-    totalPatients: 0,
-    availableBeds: 0,
-    todaysAppointments: 0,
-    activeDoctors: 0
+    totalPatients: 2,
+    availableBeds: 3,
+    todaysAppointments: 3,
+    activeDoctors: 4
   });
   const [loading, setLoading] = useState(true);
 
