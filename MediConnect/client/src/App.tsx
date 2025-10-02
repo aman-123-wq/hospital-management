@@ -178,8 +178,11 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/bed-management" component={Beds} />
+          <Route path="/beds" component={Beds} />
           <Route path="/appointments" component={Appointments} />
-          <Route path="/organ-donors" component={Donors} />
+         <Route path="/organ-donors" component={Donors} />
+          <Route path="/donors" component={Donors} />
+          <Route path="/organ-donor" component={Donors} />
           <Route path="/doctors" component={Doctors} />
           <Route path="/patients" component={Patients} />
           <Route path="/ai-assistant" component={AiAssistant} />
