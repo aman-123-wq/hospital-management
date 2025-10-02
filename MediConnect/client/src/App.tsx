@@ -284,8 +284,20 @@ function Doctors() {
 function Patients() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newPatient, setNewPatient] = useState({ 
+    name: '', 
+    age: '', 
+    condition: 'Stable', 
+    room: '' 
+  });
 
+  // Load patients
   useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = () => {
     fetch('https://mediconnect-backend-rje5.onrender.com/api/patients')
       .then(response => response.json())
       .then(data => {
@@ -296,7 +308,14 @@ function Patients() {
         console.error('Error fetching patients:', error);
         setLoading(false);
       });
-  }, []);
+  };
+
+  const addPatient = () => {
+    // This will send new patient to backend
+    console.log('Adding patient:', newPatient);
+    alert('This will save to database! We need to create the backend endpoint first.');
+    setShowAddForm(false);
+  };
 
   if (loading) {
     return (
@@ -311,11 +330,72 @@ function Patients() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Patients</h1>
-      
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Patients</h1>
+        <button 
+          onClick={() => setShowAddForm(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          + Add New Patient
+        </button>
+      </div>
+
+      {/* ADD PATIENT FORM */}
+      {showAddForm && (
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-4">Add New Patient</h2>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Patient Name"
+              className="border p-2 rounded"
+              value={newPatient.name}
+              onChange={(e) => setNewPatient({...newPatient, name: e.target.value})}
+            />
+            <input
+              type="number"
+              placeholder="Age"
+              className="border p-2 rounded"
+              value={newPatient.age}
+              onChange={(e) => setNewPatient({...newPatient, age: e.target.value})}
+            />
+            <select
+              className="border p-2 rounded"
+              value={newPatient.condition}
+              onChange={(e) => setNewPatient({...newPatient, condition: e.target.value})}
+            >
+              <option value="Stable">Stable</option>
+              <option value="Critical">Critical</option>
+              <option value="Recovering">Recovering</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Room Number"
+              className="border p-2 rounded"
+              value={newPatient.room}
+              onChange={(e) => setNewPatient({...newPatient, room: e.target.value})}
+            />
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={addPatient}
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Save Patient
+            </button>
+            <button 
+              onClick={() => setShowAddForm(false)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* PATIENT LIST */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Patient List</h2>
-        
         {patients.length === 0 ? (
           <p>No patients found.</p>
         ) : (
@@ -333,7 +413,6 @@ function Patients() {
     </div>
   );
 }
-
 // AI Assistant Page
 function AiAssistant() {
   return (
