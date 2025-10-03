@@ -5,7 +5,11 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-// SIMPLE FIX - Don't check during build, only use if available
+// DEBUG: Check what's happening with DATABASE_URL
+console.log('DEBUG: DATABASE_URL exists?', !!process.env.DATABASE_URL);
+console.log('DEBUG: NODE_ENV:', process.env.NODE_ENV);
+console.log('DEBUG: RENDER:', process.env.RENDER);
+
 const connectionString = process.env.DATABASE_URL;
 
 // Only create pool if DATABASE_URL exists
@@ -16,4 +20,8 @@ export const pool = connectionString
 export const db = pool ? drizzle({ client: pool, schema }) : null;
 
 // Helper function to check if database is available
-export const isDbAvailable = () => !!db;
+export const isDbAvailable = () => {
+  const available = !!db;
+  console.log('DEBUG: isDbAvailable:', available);
+  return available;
+};
