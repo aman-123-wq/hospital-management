@@ -152,6 +152,16 @@ export class DatabaseStorage implements IStorage {
   async createPatient(patient: InsertPatient): Promise<Patient> {
   await this.ensureDb();
   
+  try {
+    // Simple query without complex timeout logic
+    const [newPatient] = await db!.insert(patients).values(patient).returning();
+    return newPatient;
+  } catch (error) {
+    console.error('Database error creating patient:', error);
+    throw new Error('Patient creation failed - database issue');
+  }
+}
+  
   // Add timeout to prevent 2+ minute hangs
   const timeoutPromise = new Promise<never>((_, reject) => {
     setTimeout(() => reject(new Error('Database timeout - patient creation took too long')), 10000);
