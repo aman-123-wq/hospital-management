@@ -5,18 +5,15 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-// For Render deployment - don't check DATABASE_URL during build
-if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
-  console.warn('DATABASE_URL not found, but continuing for build...');
-  // Don't throw error during build
-}
+// SIMPLE FIX - Don't check during build, only use if available
+const connectionString = process.env.DATABASE_URL;
 
-// Only throw error in production runtime, not during build
-if (process.env.NODE_ENV === 'production' && process.env.RENDER && !process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+// Only create pool if DATABASE_URL exists
+export const pool = connectionString 
+  ? new Pool({ connectionString })
+  : null;
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle({ client: pool, schema });
+export const db = pool ? drizzle({ client: pool, schema }) : null;
+
+// Helper function to check if database is available
+export const isDbAvailable = () => !!db;
