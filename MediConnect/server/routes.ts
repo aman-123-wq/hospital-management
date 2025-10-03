@@ -252,15 +252,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/patients", async (req, res) => {
-    try {
-      const validatedData = insertPatientSchema.parse(req.body);
-      const patient = await storage.createPatient(validatedData);
-      res.status(201).json(patient);
-    } catch (error) {
-      console.error("Error creating patient:", error);
-      res.status(400).json({ message: "Failed to create patient" });
-    }
-  });
+  try {
+    const validatedData = insertPatientSchema.parse(req.body);
+    
+    // Add a simple timeout
+    const timeout = setTimeout(() => {
+      res.status(408).json({ message: "Request timeout - database is slow" });
+    }, 15000); // 15 second timeout
+    
+    const patient = await storage.createPatient(validatedData);
+    clearTimeout(timeout); // Clear timeout if successful
+    
+    res.status(201).json(patient);
+  } catch (error) {
+    console.error("Error creating patient:", error);
+    res.status(400).json({ message: "Failed to create patient" });
+  }
+});
 
   // Organ Donors API - FIXED VERSION
 app.get("/api/organ-donors", async (req, res) => {
